@@ -2,6 +2,13 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 function PropertyDetails() {
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [message, setMessage] = useState("");
+
+    const [success, setSuccess] = useState("");
+    const [isError, setIsError] = useState(false);
+
     const { id } = useParams();
     const [property, setProperty] = useState(null);
 
@@ -19,8 +26,26 @@ function PropertyDetails() {
         fetchProperty();
     }, [id]);
 
+    function handleContact() {
+        if (!name || !email || !message) {
+            setSuccess("Please fill all fields");
+            setIsError(true);
+            return;
+        }
+
+        console.log({ name, email, message, propertyId: property._id });
+
+        setSuccess("Inquiry sent successfully!");
+        setIsError(false);
+
+        setName("");
+        setEmail("");
+        setMessage("");
+    }
+
+
     if (!property) {
-        return <p className="text-center mt-10">Loading...</p>;
+        return <p className="text-center mt-10 text-gray">Loading Property Details</p>;
     }
 
     return (
@@ -29,7 +54,7 @@ function PropertyDetails() {
             {/* Image */}
             <div className="bg-gray-100 rounded-2xl p-4 flex justify-center">
                 <img
-                    src={property.image}
+                    src={property.image || "https://via.placeholder.com/500"}
                     alt={property.title}
                     className="max-h-[400px] object-contain"
                 />
@@ -69,28 +94,46 @@ function PropertyDetails() {
                 <div className="bg-white shadow-md rounded-2xl p-4 h-fit">
                     <h2 className="text-xl font-semibold mb-3">Contact Agent</h2>
 
+                    <p className="text-sm text-gray-600 mb-2">
+                        Agent: {property.agent?.name || "Admin"}
+                    </p>
+
                     <input
                         type="text"
                         placeholder="Your Name"
                         className="w-full border p-2 mb-2 rounded-lg"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
                     />
 
                     <input
                         type="email"
                         placeholder="Your Email"
                         className="w-full border p-2 mb-2 rounded-lg"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                     />
 
                     <textarea
                         placeholder="Message"
                         className="w-full border p-2 mb-3 rounded-lg"
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
                     ></textarea>
 
                     <button
+                        onClick={handleContact}
                         className="bg-blue-500 text-white px-4 py-2 rounded-lg"
                     >
                         Send Message
                     </button>
+
+                    {success && (
+                        <p className={`mt-3 text-sm ${isError ? "text-red-500" : "text-green-600"}`}>
+                            {success}
+                        </p>
+                    )}
+
                 </div>
 
             </div>

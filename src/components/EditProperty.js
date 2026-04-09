@@ -9,6 +9,7 @@ function EditProperty() {
   const [rooms, setRooms] = useState("");
   const [image, setImage] = useState("");
   const [description, setDescription] = useState("");
+  const [status, setStatus] = useState("");
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -63,8 +64,13 @@ function EditProperty() {
       );
 
       if (res.ok) {
-        alert("Property updated");
-        navigate("/properties");
+        setStatus("Property updated successfully!");
+
+        setTimeout(() => {
+          navigate("/properties");
+        }, 1500);
+      } else {
+        setStatus("Update failed");
       }
     } catch (err) {
       console.log(err);
@@ -73,7 +79,7 @@ function EditProperty() {
 
   return (
     <div className="min-h-screen flex justify-center items-center">
-      
+
       <form
         onSubmit={handleSubmit}
         className="bg-white shadow-md rounded-2xl p-6 w-full max-w-lg space-y-4"
@@ -115,7 +121,7 @@ function EditProperty() {
           <option value="apartment">Apartment</option>
           <option value="house">House</option>
           <option value="villa">Villa</option>
-          <option value="flat">Flat</option>
+          <option value="Flat">Flat</option>
           <option value="plot">Plot</option>
         </select>
 
@@ -148,6 +154,11 @@ function EditProperty() {
         >
           Update Property
         </button>
+
+        {status && (
+          <p className="mt-3 text-sm text-green-600">{status}</p>
+        )}
+
       </form>
     </div>
   );

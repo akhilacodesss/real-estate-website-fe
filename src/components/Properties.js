@@ -5,6 +5,7 @@ function Properties() {
   const [properties, setProperties] = useState([]);
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
+  const [priceRange, setPriceRange] = useState("");
 
   const token = localStorage.getItem("token");
 
@@ -50,12 +51,29 @@ function Properties() {
     navigate(`/property/${id}`);
   }
 
-  const filteredProperties = properties.filter((item) =>
-    item.location.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredProperties = properties.filter((item) => {
+    const matchesLocation = item.location
+      .toLowerCase()
+      .includes(search.toLowerCase());
+
+    let matchesPrice = true;
+
+    if (priceRange === "low") {
+      matchesPrice = item.price < 500000;
+    } else if (priceRange === "mid") {
+      matchesPrice = item.price >= 500000 && item.price <= 2000000;
+    } else if (priceRange === "high") {
+      matchesPrice = item.price > 2000000;
+    }
+
+    return matchesLocation && matchesPrice;
+  });
 
   return (
     <div className="max-w-7xl mx-auto">
+
+      <h1 className="text-2xl font-bold mb-4  text-center md:text-left">All Properties</h1>
+
 
       {/* Top */}
       <div className="flex flex-col md:flex-row justify-between gap-4 mb-6">
@@ -67,7 +85,17 @@ function Properties() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        
+
+        <select
+          className="border p-2 rounded-lg w-full md:w-1/4"
+          value={priceRange}
+          onChange={(e) => setPriceRange(e.target.value)} >
+          <option value="">All Prices</option>
+          <option value="low">Below 5L</option>
+          <option value="mid">5L - 20L</option>
+          <option value="high">Above 20L</option>
+        </select>
+
       </div>
 
       {/* Grid */}
@@ -81,10 +109,10 @@ function Properties() {
           filteredProperties.map((item) => (
             <div
               key={item._id}
-              className="bg-white rounded-2xl shadow-md overflow-hidden"
+              className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition"
             >
               <img
-                src={item.image || "https://via.placeholder.com/300"}
+                src={item.image ? item.image : "https://via.placeholder.com/300"}
                 alt="property"
                 className="w-full h-48 object-cover rounded-t-2xl"
               />
@@ -100,9 +128,13 @@ function Properties() {
                   ₹ {item.price}
                 </p>
 
+                <p className="text-sm text-gray-600">
+                  {item.rooms} rooms • {item.type}
+                </p>
+
                 {/* USER */}
                 <p className="text-xs text-gray-400">
-                  Posted by: {item.agent?.name || "Unknown"}
+                  Listed by: {item.agent?.name || "Admin"}
                 </p>
 
                 <div className="flex gap-2 mt-3">

@@ -9,6 +9,8 @@ function AddProperty() {
   const [rooms, setRooms] = useState("");
   const [image, setImage] = useState("");
   const [description, setDescription] = useState("");
+  const [status, setStatus] = useState("");
+
   const navigate = useNavigate();
 
   async function handleSubmit(e) {
@@ -36,9 +38,13 @@ function AddProperty() {
       const data = await res.json();
 
       if (res.ok) {
-        navigate("/properties");
+        setStatus("Property added successfully!");
+        setTimeout(() => {
+          navigate("/properties");
+        }, 1500);
       } else {
-        console.log(data);
+         console.log("ERROR:", data);
+        setStatus( data.message || "Failed to add property");
       }
     } catch (err) {
       console.log(err);
@@ -47,7 +53,7 @@ function AddProperty() {
 
   return (
     <div className="min-h-screen flex justify-center items-center">
-      
+
       <form
         onSubmit={handleSubmit}
         className="bg-white shadow-md rounded-2xl p-6 w-full max-w-lg space-y-4"
@@ -105,7 +111,7 @@ function AddProperty() {
             <option value="apartment">Apartment</option>
             <option value="house">House</option>
             <option value="villa">Villa</option>
-            <option value="flat">Flat</option>
+            <option value="Flat">Flat</option>
             <option value="plot">Plot</option>
           </select>
         </div>
@@ -153,6 +159,10 @@ function AddProperty() {
         >
           Add Property
         </button>
+
+        {status && (
+          <p className="text-green-600 text-sm mt-2">{status}</p>
+        )}
       </form>
     </div>
   );

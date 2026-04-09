@@ -1,70 +1,164 @@
-# Getting Started with Create React App
+# 🏡 Real Estate MERN Application
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A full-stack Real Estate web application built using the MERN stack.
+Users can browse, search, and view property listings, while agents can manage their own properties through a dashboard.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## 🚀 Live Demo
 
-### `npm start`
+🌐 Frontend (Netlify):
+https://real-estate-website000.netlify.app/
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+🌐 Backend (Render):
+https://real-estate-website-be.onrender.com
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+---
 
-### `npm test`
+## 👥 User Roles
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 👤 User
 
-### `npm run build`
+* Browse all properties
+* Search by location
+* Filter by price
+* View detailed property info
+* Contact agent
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 🧑‍💼 Agent
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+* Add new properties
+* Edit existing properties
+* Delete listings
+* Manage properties via dashboard
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+---
 
-### `npm run eject`
+## ✨ Features
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### 🏠 Property Listings
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+* View all properties in a responsive grid
+* Property details include:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+  * Title
+  * Location
+  * Price
+  * Rooms & type
+  * Description
+  * Image
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### 🔍 Search & Filters
 
-## Learn More
+* Search by location
+* Filter by price range
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### 📍 Map Integration
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+* Google Maps embedded using property location
 
-### Code Splitting
+### 📩 Contact System
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+* Users can send inquiries via contact form
+* Displays success/error messages (no alerts)
 
-### Analyzing the Bundle Size
+### 🧑‍💼 Agent System
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+* Displays property owner (agent)
+* Role-based actions (edit/delete only for owner)
 
-### Making a Progressive Web App
+### 📝 Property Management
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+* Add Property
+* Edit Property
+* Delete Property
 
-### Advanced Configuration
+### 📊 Dashboard
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+* View only your own properties
+* Manage listings easily
 
-### Deployment
+### 🔐 Authentication
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+* Login / Signup system
+* JWT-based authentication
+* Role-based access control
 
-### `npm run build` fails to minify
+### 📱 Responsive Design
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+* Built using Tailwind CSS
+* Works across mobile, tablet, desktop
+
+---
+
+## 🛠️ Tech Stack
+
+**Frontend:**
+
+* React
+* Tailwind CSS
+* React Router
+
+**Backend:**
+
+* Node.js
+* Express.js
+
+**Database:**
+
+* MongoDB (Mongoose)
+
+---
+
+## 📁 Project Structure
+
+client/ → React frontend
+server/ → Node.js backend
+
+---
+
+## ⚙️ Setup Instructions
+
+### 1. Clone Repository
+
+git clone https://github.com/akhilacodesss/real-estate-website-fe
+cd real-estate-website-fe
+
+### 2. Install Dependencies
+
+npm install
+
+### 3. Run Frontend
+
+npm run dev
+
+---
+
+### Backend Setup
+
+git clone https://github.com/akhilacodesss/real-estate-website-be
+cd real-estate-website-be
+
+npm install
+npm start
+
+---
+
+## 🔑 Demo Credentials
+
+User / Agent Login:
+
+Email: [test@gmail.com]
+Password: test
+
+---
+
+## 🌐 API Endpoints
+
+* POST /api/users/register
+* POST /api/users/login
+* GET /api/properties
+* POST /api/properties
+* PUT /api/properties/:id
+* DELETE /api/properties/:id
+
