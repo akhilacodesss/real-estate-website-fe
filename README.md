@@ -1,17 +1,17 @@
-# 🏡 Real Estate MERN Application
+## 🏡 Real Estate MERN Application
 
 A full-stack Real Estate web application built using the MERN stack.
-Users can browse, search, and view property listings, while agents can manage their own properties through a dashboard.
+Users can browse and contact agents, while agents can manage property listings through a dedicated dashboard.
 
 ---
 
 ## 🚀 Live Demo
 
 🌐 Frontend (Netlify):
-https://real-estate-website000.netlify.app/
+[https://real-estate-website00.netlify.app/](https://real-estate-website000.netlify.app/)
 
 🌐 Backend (Render):
-https://real-estate-website-be.onrender.com
+[https://real-estate-website-be.onrender.com](https://real-estate-website-be.onrender.com)
 
 ---
 
@@ -23,7 +23,7 @@ https://real-estate-website-be.onrender.com
 * Search by location
 * Filter by price
 * View detailed property info
-* Contact agent
+* Contact agents via messaging system
 
 ### 🧑‍💼 Agent
 
@@ -31,6 +31,7 @@ https://real-estate-website-be.onrender.com
 * Edit existing properties
 * Delete listings
 * Manage properties via dashboard
+* View and reply to user messages
 
 ---
 
@@ -38,56 +39,62 @@ https://real-estate-website-be.onrender.com
 
 ### 🏠 Property Listings
 
-* View all properties in a responsive grid
-* Property details include:
+* Responsive property grid
+* Detailed property pages including:
 
   * Title
   * Location
-  * Price
+  * Price (₹ formatted in L/Cr)
   * Rooms & type
   * Description
   * Image
+
+---
 
 ### 🔍 Search & Filters
 
 * Search by location
 * Filter by price range
 
-### 📍 Map Integration
+---
 
-* Google Maps embedded using property location
+### 📩 Messaging System (Core Feature 🔥)
 
-### 📩 Contact System
+* Users can send messages to agents
+* Agents receive messages in dashboard
+* Real-time style chat interface
+* Conversation view between user & agent
 
-* Users can send inquiries via contact form
-* Displays success/error messages (no alerts)
+---
 
 ### 🧑‍💼 Agent System
 
-* Displays property owner (agent)
-* Role-based actions (edit/delete only for owner)
+* Role-based access control
+* Only agents can manage properties
+* Only property owners can edit/delete
 
-### 📝 Property Management
-
-* Add Property
-* Edit Property
-* Delete Property
+---
 
 ### 📊 Dashboard
 
 * View only your own properties
-* Manage listings easily
+* Manage listings (Add / Edit / Delete)
+* Access user messages
+
+---
 
 ### 🔐 Authentication
 
 * Login / Signup system
 * JWT-based authentication
-* Role-based access control
+* Secure protected routes
+
+---
 
 ### 📱 Responsive Design
 
-* Built using Tailwind CSS
-* Works across mobile, tablet, desktop
+* Built with Tailwind CSS
+* Mobile-first design
 
 ---
 
@@ -95,7 +102,7 @@ https://real-estate-website-be.onrender.com
 
 **Frontend:**
 
-* React
+* React (CRA)
 * Tailwind CSS
 * React Router
 
@@ -112,53 +119,59 @@ https://real-estate-website-be.onrender.com
 
 ## 📁 Project Structure
 
-client/ → React frontend
-server/ → Node.js backend
+```
+client/ → React frontend  
+server/ → Node.js backend  
+```
 
 ---
 
 ## ⚙️ Setup Instructions
 
-### 1. Clone Repository
+### Frontend
 
+```bash
 git clone https://github.com/akhilacodesss/real-estate-website-fe
 cd real-estate-website-fe
-
-### 2. Install Dependencies
-
 npm install
-
-### 3. Run Frontend
-
-npm run dev
+npm start
+```
 
 ---
 
-### Backend Setup
+### Backend
 
+```bash
 git clone https://github.com/akhilacodesss/real-estate-website-be
 cd real-estate-website-be
-
 npm install
 npm start
+```
 
 ---
 
 ## 🔑 Demo Credentials
 
-User / Agent Login:
+**Agent Login:**
 
-Email: [test@gmail.com]
-Password: test
+* Email: [agent@gmail.com](mailto:agent@gmail.com)
+* Password: test
+
+**User Login:**
+
+* Email: [user@gmail.com](mailto:user@gmail.com)
+* Password: test1
 
 ---
 
 ## 🌐 API Endpoints
 
-* POST /api/users/register
+* POST /api/users/signup
 * POST /api/users/login
 * GET /api/properties
 * POST /api/properties
 * PUT /api/properties/:id
 * DELETE /api/properties/:id
+* GET /api/messages
+* POST /api/messages
 
