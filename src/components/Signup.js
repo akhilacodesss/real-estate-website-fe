@@ -3,15 +3,19 @@ import { useNavigate, Link } from "react-router-dom";
 
 function Signup() {
   const [name, setName] = useState("");
-  const [email, setEamil] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [role, setRole] = useState("user");
+  const [showPassword, setShowPassword] = useState(false);
+
+  const API = process.env.REACT_APP_API_URL;
   const navigate = useNavigate();
 
   async function handleSubmit(e) {
     e.preventDefault();
     try {
-      const res = await fetch("https://real-estate-website-be.onrender.com/api/users/signup", {
+      const res = await fetch(`${API}/api/users/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -20,6 +24,7 @@ function Signup() {
           name,
           email,
           password,
+          role
         }),
       });
 
@@ -30,13 +35,14 @@ function Signup() {
         return;
       }
 
-      setMessage("Signup successful!");
-      navigate("/");
+      setMessage("Signup successful! Redirecting...");
 
-      alert("Signup successful");
-      navigate("/"); // go to login
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500);
+
     } catch (err) {
-      console.log(err);
+      setMessage("Something went wrong. Try again.");
     }
   }
 
@@ -71,22 +77,43 @@ function Signup() {
           placeholder="Enter your email"
           className="w-full border p-2 rounded-lg"
           value={email}
-          onChange={(e) => setEamil(e.target.value)}
+          onChange={(e) => setEmail(e.target.value)}
         />
 
         {/* Password */}
-        <input
-          type="password"
-          placeholder="Enter your password"
-          className="w-full border p-2 rounded-lg"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <div className="relative" >
+          <input
+            type={showPassword ? "text" : "password"}
+            placeholder="Enter your password"
+            className="w-full border p-2 rounded-lg pr-10"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+
+          <i
+            onClick={() => setShowPassword(!showPassword)}
+            className={`fa-solid ${showPassword ? "fa-eye-slash" : "fa-eye"
+              } absolute right-3 top-3 cursor-pointer text-gray-600`}
+          ></i>
+        </div>
+        {/* role */}
+        <div>
+          <label className="block text-sm mb-1">Register as</label>
+          <select
+            className="w-full border p-2 rounded-lg"
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+          >
+            <option value="user">User</option>
+            <option value="agent">Agent</option>
+          </select>
+        </div>
 
         {/* Button */}
         <button
           type="submit"
-          className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition"
+          disabled={!name || !email || !password}
+          className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition disabled:opacity-50"
         >
           Signup
         </button>
@@ -94,7 +121,7 @@ function Signup() {
         {/* Login Link */}
         <p className="text-sm text-center">
           Already have an account?{" "}
-          <Link to="/" className="text-blue-500 font-medium">
+          <Link to="/login" className="text-blue-500 font-medium">
             Login
           </Link>
         </p>

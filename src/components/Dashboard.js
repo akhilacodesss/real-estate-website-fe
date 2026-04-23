@@ -1,19 +1,22 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 function Dashboard() {
   const [properties, setProperties] = useState([]);
   const navigate = useNavigate();
 
+    const API = process.env.REACT_APP_API_URL;
   const token = localStorage.getItem("token");
 
-  const userId = token
-    ? JSON.parse(atob(token.split(".")[1])).id
+  const user = token
+    ? JSON.parse(atob(token.split(".")[1]))
     : null;
+
+  const userId = user?.id;
+  const role = user?.role;
 
   useEffect(() => {
     async function fetchProperties() {
-      const res = await fetch("https://real-estate-website-be.onrender.com/api/properties");
+      const res = await fetch(`${API}/api/properties`);
       const data = await res.json();
 
       //  ONLY MY PROPERTIES
@@ -28,7 +31,7 @@ function Dashboard() {
   }, [userId]);
 
   async function handleDelete(id) {
-    await fetch(`https://real-estate-website-be.onrender.com/api/properties/${id}`, {
+    await fetch(`${API}/api/properties${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -43,21 +46,31 @@ function Dashboard() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto">
 
-      <div className="flex justify-between mb-6">
-        <h1 className="text-2xl font-bold">
+    <div className="min-h-screen bg-[#f3ede8] px-6 py-10 max-w-7xl mx-auto">
+
+      {/* Header */}
+      <div className="flex justify-between items-center mb-8">
+
+        <h1 className="text-3xl font-bold text-[#3b2a1f]">
           Manage Your Properties
         </h1>
 
-        <button
-          onClick={() => navigate("/add")}
-          className="bg-green-500 text-white px-4 py-2 rounded-lg"
-        >
-          + Add Property
-        </button>
+        <div className="flex gap-3">
+
+          {role === "agent" && (
+            <button
+              onClick={() => navigate("/add")}
+              className="bg-[#3b2a1f] text-white px-5 py-2 rounded-xl shadow hover:opacity-90 transition"
+            >
+              + Add Property
+            </button>
+          )}
+
+        </div>
       </div>
 
+      {/* Properties Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
 
         {properties.length === 0 ? (
@@ -66,28 +79,43 @@ function Dashboard() {
           </p>
         ) : (
           properties.map((item) => (
-            <div key={item._id} className="bg-white p-4 rounded-xl shadow">
+            <div
+              key={item._id}
+              className="bg-white rounded-2xl shadow-md overflow-hidden group"
+            >
 
-              <img
-                src={item.image || "https://via.placeholder.com/300"}
-                alt="property"
-                className="w-full h-48 object-cover rounded-t-2xl"
-              />
+              {/* Image */}
+              <div className="h-44 overflow-hidden">
+                <img
+                  src={item.image || "https://via.placeholder.com/300"}
+                  alt="property"
+                  className="w-full h-full object-cover group-hover:scale-105 transition"
+                />
+              </div>
 
-              <h3 className="font-semibold mt-2">{item.title}</h3>
-              <p>{item.location}</p>
+              {/* Content */}
+              <div className="p-4 space-y-1">
+                <h3 className="font-bold text-[#3b2a1f] line-clamp-1">
+                  {item.title}
+                </h3>
 
-              <div className="flex gap-2 mt-2">
+                <p className="text-sm text-gray-500 line-clamp-1">
+                  📍 {item.location}
+                </p>
+              </div>
+
+              {/* Actions */}
+              <div className="flex gap-2 px-4 pb-4">
                 <button
                   onClick={() => handleEdit(item._id)}
-                  className="flex-1 bg-yellow-500 text-white py-1 rounded"
+                  className="flex-1 border border-[#3b2a1f] text-[#3b2a1f] py-2 rounded-xl text-sm font-medium hover:bg-[#3b2a1f] hover:text-white transition"
                 >
                   Edit
                 </button>
 
                 <button
                   onClick={() => handleDelete(item._id)}
-                  className="flex-1 bg-red-500 text-white py-1 rounded"
+                  className="flex-1 border border-red-500 text-red-500 py-2 rounded-xl text-sm font-medium hover:bg-red-500 hover:text-white transition"
                 >
                   Delete
                 </button>
@@ -98,6 +126,7 @@ function Dashboard() {
         )}
 
       </div>
+
     </div>
   );
 }

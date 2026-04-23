@@ -4,13 +4,16 @@ import { useNavigate, Link } from "react-router-dom";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState("");
+
+  const API = process.env.REACT_APP_API_URL;
   const navigate = useNavigate();
 
   async function handleSubmit(e) {
     e.preventDefault();
     try {
-      const res = await fetch("https://real-estate-website-be.onrender.com/api/users/login", {
+      const res = await fetch(`${API}/api/users/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -29,10 +32,12 @@ function Login() {
       }
 
       localStorage.setItem("token", data.token);
-      setMessage("Login successful");
-      navigate("/properties");
+      
+       setMessage("Login successful! Redirecting...");
+      setTimeout(() => navigate("/"), 1200);
+      
     } catch (err) {
-      console.log(err);
+      setMessage("Something went wrong. Try again.");
     }
   }
 
@@ -53,6 +58,7 @@ function Login() {
 
         {/* Email */}
         <input
+          required
           type="email"
           placeholder="Enter your email"
           className="w-full border p-2 rounded-lg"
@@ -61,17 +67,27 @@ function Login() {
         />
 
         {/* Password */}
-        <input
-          type="password"
-          placeholder="Enter your password"
-          className="w-full border p-2 rounded-lg"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <div className="relative" >
+          <input
+            required
+            type={showPassword ? "text" : "password"}
+            placeholder="Enter your password"
+            className="w-full border p-2 rounded-lg pr-10"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+
+          <i
+            onClick={() => setShowPassword(!showPassword)}
+            className={`fa-solid ${showPassword ? "fa-eye-slash" : "fa-eye"
+              } absolute right-3 top-3 cursor-pointer text-gray-600`}
+          ></i>
+        </div>
 
         {/* Button */}
         <button
           type="submit"
+          disabled={!email || !password}
           className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition"
         >
           Login
