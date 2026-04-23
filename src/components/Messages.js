@@ -30,7 +30,7 @@ function Messages() {
     }
 
     if (token) fetchMessages();
-  }, [token]);
+  }, [token, API]);
 
   // Open chat
   async function openChat(message) {

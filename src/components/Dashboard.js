@@ -28,7 +28,7 @@ function Dashboard() {
     }
 
     fetchProperties();
-  }, [userId]);
+  }, [userId, API]);
 
   async function handleDelete(id) {
     await fetch(`${API}/api/properties${id}`, {

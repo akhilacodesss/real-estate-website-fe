@@ -35,7 +35,7 @@ function EditProperty() {
     }
 
     fetchProperty();
-  }, [id]);
+  }, [id, API]);
 
   async function handleSubmit(e) {
     e.preventDefault();

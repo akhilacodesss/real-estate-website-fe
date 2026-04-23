@@ -52,7 +52,7 @@ function PropertyDetails() {
             }
         }
         fetchProperty();
-    }, [id]);
+    }, [id, API]);
 
     async function handleSendMessage(e) {
         console.log("SEND BUTTON CLICKED");
@@ -203,7 +203,7 @@ function PropertyDetails() {
                                 relatedProperties.slice(0, 3).map(p => (
                                     <Link to={`/property/${p._id}`} key={p._id} className="bg-white group rounded-xl overflow-hidden border hover:shadow-xl transition-all">
                                         <div className="overflow-hidden h-32">
-                                            <img src={p.image} className="w-full h-full object-cover group-hover:scale-110 transition-transform" />
+                                            <img src={p.image} className="w-full h-full object-cover group-hover:scale-110 transition-transform" ali="property" />
                                         </div>
                                         <div className="p-3">
                                             <p className="font-bold text-gray-900">₹ {p.price}</p>
