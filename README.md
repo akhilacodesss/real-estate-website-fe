@@ -8,10 +8,10 @@ Users can browse and contact agents, while agents can manage property listings t
 ## 🚀 Live Demo
 
 🌐 Frontend (Netlify):
-[https://real-estate-website00.netlify.app/](https://real-estate-website000.netlify.app/)
+https://real-estate-website00.netlify.app/
 
 🌐 Backend (Render):
-[https://real-estate-website-be.onrender.com](https://real-estate-website-be.onrender.com)
+https://real-estate-website-be.onrender.com/
 
 ---
 
