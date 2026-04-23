@@ -30,7 +30,6 @@ function PropertyDetails() {
     const [email, setEmail] = useState("");
     const [message, setMessage] = useState("");
     const [success, setSuccess] = useState("");
-    const [isError, setIsError] = useState(false);
 
     const API = process.env.REACT_APP_API_URL;
 

@@ -43,7 +43,7 @@ function Properties() {
       }
     }
     fetchProperties();
-  }, []);
+  }, [API]);
 
   async function handleDelete(id) {
     const token = localStorage.getItem("token");
@@ -60,14 +60,6 @@ function Properties() {
     } catch (err) {
       console.log(err);
     }
-  }
-
-  function handleEdit(id) {
-    navigate(`/update/${id}`);
-  }
-
-  function handleView(id) {
-    navigate(`/property/${id}`);
   }
 
   const filteredProperties = properties.filter((item) => {

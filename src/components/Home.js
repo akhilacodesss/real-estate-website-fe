@@ -36,7 +36,7 @@ function Home() {
         }
 
         fetchData();
-    }, []);
+    }, [API]);
 
     return (
         <>
