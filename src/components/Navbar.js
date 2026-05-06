@@ -45,10 +45,10 @@ function Navbar({ children }) {
 
       {/* NAVBAR */}
       <nav className="bg-[#f3ede8]/90 backdrop-blur-md border-b border-[#e5ddd5] sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col items-center md:flex-row md:items-center md:justify-between gap-4">
 
           {/* LOGO */}
-          <Link to="/" className="flex items-center gap-1">
+          <Link to="/" className="flex items-center justify-center gap-1">
             <img src={logo} alt="Brickly" className="h-14 w-auto object-contain" />
             <span className="text-2xl font-bold text-[#2f2219] -ml-1">
               Brickly
@@ -56,7 +56,7 @@ function Navbar({ children }) {
           </Link>
 
           {/* CENTER LINKS */}
-          <div className="hidden md:flex items-center gap-8 text-[15px] font-medium">
+          <div className="flex flex-wrap justify-center md:justify-start items-center gap-5 text-sm md:text-[15px] font-medium">
 
             {navItems.map((item) => {
               const isActive =
@@ -103,7 +103,7 @@ function Navbar({ children }) {
           </div>
 
           {/* RIGHT SIDE */}
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap justify-center items-center gap-4">
 
             {token && (
               <Link
@@ -126,7 +126,7 @@ function Navbar({ children }) {
 
             {/* USER */}
             {token && (
-              <span className="hidden md:block text-sm text-[#2f2219] font-medium">
+              <span className="flex flex-wrap text-sm text-[#2f2219] font-medium">
                 {user?.name}
               </span>
             )}
