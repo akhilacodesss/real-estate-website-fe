@@ -78,8 +78,6 @@ Supported property types:
 - Apartment
 - House
 - Villa
-- Flat
-- Plot
 
 ---
 
