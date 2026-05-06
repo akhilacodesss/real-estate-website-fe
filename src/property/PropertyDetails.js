@@ -35,7 +35,7 @@ function PropertyDetails() {
   const navigate = useNavigate();
 
   const API = process.env.REACT_APP_API_URL;
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = JSON.parse(localStorage.getItem("user") || "null");
 
   useEffect(() => {
     async function fetchProperty() {

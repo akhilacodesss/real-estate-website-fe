@@ -142,7 +142,7 @@ function Home() {
                             <button
                                 onClick={() =>
                                     navigate(
-                                        `/property?location=${location}&type=${type}&price=${priceRange}`
+                                        `/properties?location=${location}&type=${type}&price=${priceRange}`
                                     )
                                 }
                                 className="bg-[#3b2a1f] text-white px-5 py-2 rounded-md hover:opacity-90"
@@ -263,8 +263,8 @@ function Home() {
                 {wishlistMessage && (
                     <p
                         className={`text-center text-sm mt-6 ${wishlistMessage.includes("Removed")
-                                ? "text-red-500"
-                                : "text-green-600"
+                            ? "text-red-500"
+                            : "text-green-600"
                             }`}
                     >
                         {wishlistMessage}
@@ -275,7 +275,7 @@ function Home() {
 
             <Contact />
 
-            <Footer/>
+            <Footer />
         </>
     );
 }
