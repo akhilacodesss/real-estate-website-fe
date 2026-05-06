@@ -9,7 +9,8 @@ function AddProperty() {
   const [rooms, setRooms] = useState("");
   const [image, setImage] = useState("");
   const [description, setDescription] = useState("");
-  const [status, setStatus] = useState("");
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
 
   const API = process.env.REACT_APP_API_URL;
   const navigate = useNavigate();
@@ -18,12 +19,14 @@ function AddProperty() {
     e.preventDefault();
 
     if (!title || !location || !type || !rooms || !image || !description) {
-      setStatus("Please fill all required fields");
+      setError("Please fill all required fields");
+      setSuccess("");
       return;
     }
 
     if (price <= 0) {
-      setStatus("Enter a valid price");
+      setError("Enter a valid price");
+      setSuccess("");
       return;
     }
 
@@ -50,7 +53,8 @@ function AddProperty() {
       const data = await res.json();
 
       if (res.ok) {
-        setStatus("Property added successfully!");
+        setSuccess("Property added successfully!");
+        setError("");
 
         setTitle("");
         setPrice("");
@@ -65,11 +69,12 @@ function AddProperty() {
         }, 1500);
 
       } else {
-        console.log("ERROR:", data);
-        setStatus(data.message || "Failed to add property");
+        setError(data.message || "Failed to add property");
+        setSuccess("");
       }
-    } catch (err) {
-      setStatus("Something went wrong. Try again.");
+    } catch {
+      setError("Something went wrong. Try again.");
+      setSuccess("");
     }
   }
 
@@ -104,6 +109,7 @@ function AddProperty() {
             <label className="text-sm text-gray-600">Price</label>
             <input
               type="number"
+              min="1"
               className="w-full border border-gray-200 p-3 rounded-xl focus:ring-2 focus:ring-[#3b2a1f] outline-none"
               value={price}
               onChange={(e) => setPrice(Number(e.target.value))}
@@ -188,9 +194,17 @@ function AddProperty() {
         </button>
 
         {/* Status */}
-        <p className={`text-sm ${status.includes("success") ? "text-green-600" : "text-red-500"}`}>
-          {status}
-        </p>
+        {success && (
+          <p className="text-sm text-green-600">
+            {success}
+          </p>
+        )}
+
+        {error && (
+          <p className="text-sm text-red-500">
+            {error}
+          </p>
+        )}
       </form>
     </div>
   );

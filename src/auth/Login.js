@@ -1,13 +1,11 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
-function Signup() {
-  const [name, setName] = useState("");
+function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
-  const [role, setRole] = useState("user");
   const [showPassword, setShowPassword] = useState(false);
+  const [message, setMessage] = useState("");
 
   const API = process.env.REACT_APP_API_URL;
   const navigate = useNavigate();
@@ -15,46 +13,46 @@ function Signup() {
   async function handleSubmit(e) {
     e.preventDefault();
     try {
-      const res = await fetch(`${API}/api/users/signup`, {
+      const res = await fetch(`${API}/api/users/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name,
           email,
           password,
-          role
         }),
       });
 
       const data = await res.json();
 
       if (!res.ok) {
-        setMessage(data.message || "Signup failed");
+        setMessage(data.message || "Login failed");
         return;
       }
 
-      setMessage("Signup successful! Redirecting...");
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
 
-      setTimeout(() => {
-        navigate("/login");
-      }, 1500);
+      setMessage("Login successful! Redirecting...");
+      setTimeout(() => navigate("/"), 1200);
 
-    } catch (err) {
+    } catch {
       setMessage("Something went wrong. Try again.");
     }
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+    <div className="min-h-screen flex items-center justify-center bg-[#f3ede8]">
 
       <form
         onSubmit={handleSubmit}
         className="bg-white p-6 rounded-2xl shadow-md w-full max-w-sm space-y-4"
       >
-        <h2 className="text-2xl font-bold text-center">Signup</h2>
-
+        <h2 className="text-2xl font-bold text-center">Login</h2>
+        <p className="text-sm text-center text-[#806248]">
+          Login to continue exploring properties
+        </p>
         {message && (
           <p className={`text-center text-sm ${message.includes("success") ? "text-green-500" : "text-red-500"
             }`}>
@@ -62,17 +60,9 @@ function Signup() {
           </p>
         )}
 
-        {/* Name */}
-        <input
-          type="text"
-          placeholder="Enter your name"
-          className="w-full border p-2 rounded-lg"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-
         {/* Email */}
         <input
+          required
           type="email"
           placeholder="Enter your email"
           className="w-full border p-2 rounded-lg"
@@ -83,6 +73,7 @@ function Signup() {
         {/* Password */}
         <div className="relative" >
           <input
+            required
             type={showPassword ? "text" : "password"}
             placeholder="Enter your password"
             className="w-full border p-2 rounded-lg pr-10"
@@ -96,33 +87,21 @@ function Signup() {
               } absolute right-3 top-3 cursor-pointer text-gray-600`}
           ></i>
         </div>
-        {/* role */}
-        <div>
-          <label className="block text-sm mb-1">Register as</label>
-          <select
-            className="w-full border p-2 rounded-lg"
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
-          >
-            <option value="user">User</option>
-            <option value="agent">Agent</option>
-          </select>
-        </div>
 
         {/* Button */}
         <button
           type="submit"
-          disabled={!name || !email || !password}
-          className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition disabled:opacity-50"
+          disabled={!email || !password}
+          className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition"
         >
-          Signup
+          Login
         </button>
 
-        {/* Login Link */}
+        {/* Signup Link */}
         <p className="text-sm text-center">
-          Already have an account?{" "}
-          <Link to="/login" className="text-blue-500 font-medium">
-            Login
+          Don’t have an account?{" "}
+          <Link to="/signup" className="text-blue-500 font-medium">
+            Signup
           </Link>
         </p>
       </form>
@@ -130,4 +109,4 @@ function Signup() {
   );
 }
 
-export default Signup;
+export default Login;

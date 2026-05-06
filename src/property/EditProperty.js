@@ -11,7 +11,8 @@ function EditProperty() {
   const [rooms, setRooms] = useState("");
   const [image, setImage] = useState("");
   const [description, setDescription] = useState("");
-  const [status, setStatus] = useState("");
+ const [success, setSuccess] = useState("");
+const [error, setError] = useState("");
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -30,7 +31,8 @@ function EditProperty() {
         setImage(data.image);
         setDescription(data.description);
       } catch (err) {
-        setStatus("Failed to load property");
+       setError("Failed to load property");
+setSuccess("");
       }
     }
 
@@ -41,7 +43,8 @@ function EditProperty() {
     e.preventDefault();
 
     if (!title || !price || !location) {
-      setStatus("Please fill required fields");
+      setError("Please fill required fields");
+setSuccess("");
       return;
     }
 
@@ -49,7 +52,7 @@ function EditProperty() {
       const token = localStorage.getItem("token");
 
       const res = await fetch(
-        `${API}/api/properties${id}`,
+        `${API}/api/properties/${id}`,
         {
           method: "PUT",
           headers: {
@@ -69,16 +72,19 @@ function EditProperty() {
       );
 
       if (res.ok) {
-        setStatus("Property updated successfully!");
+       setSuccess("Property updated successfully!");
+setError("");
 
         setTimeout(() => {
           navigate("/properties");
         }, 1500);
       } else {
-        setStatus("Update failed");
+        setError("Update failed");
+setSuccess("");
       }
-    } catch (err) {
-      setStatus("Something went wrong");
+    } catch  {
+      setError("Something went wrong");
+setSuccess("");
     }
   }
 
@@ -109,6 +115,7 @@ function EditProperty() {
             <label className="text-sm text-gray-600">Price</label>
             <input
               type="number"
+              min="1"
               className="w-full border border-gray-200 p-3 rounded-xl focus:ring-2 focus:ring-[#3b2a1f] outline-none"
               value={price}
               onChange={(e) => setPrice(Number(e.target.value))}
@@ -129,6 +136,7 @@ function EditProperty() {
             <label className="text-sm text-gray-600">Rooms</label>
             <input
               type="number"
+              min="1"
               className="w-full border border-gray-200 p-3 rounded-xl focus:ring-2 focus:ring-[#3b2a1f] outline-none"
               value={rooms}
               onChange={(e) => setRooms(Number(e.target.value))}
@@ -180,9 +188,17 @@ function EditProperty() {
           Update Property
         </button>
 
-        {status && (
-          <p className="mt-3 text-sm text-green-600">{status}</p>
-        )}
+        {success && (
+  <p className="mt-3 text-sm text-green-600">
+    {success}
+  </p>
+)}
+
+{error && (
+  <p className="mt-3 text-sm text-red-500">
+    {error}
+  </p>
+)}
 
       </form>
     </div>

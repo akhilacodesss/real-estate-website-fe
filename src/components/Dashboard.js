@@ -3,8 +3,10 @@ import { useNavigate } from "react-router-dom";
 function Dashboard() {
   const [properties, setProperties] = useState([]);
   const navigate = useNavigate();
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
 
-    const API = process.env.REACT_APP_API_URL;
+  const API = process.env.REACT_APP_API_URL;
   const token = localStorage.getItem("token");
 
   const user = token
@@ -31,14 +33,25 @@ function Dashboard() {
   }, [userId, API]);
 
   async function handleDelete(id) {
-    await fetch(`${API}/api/properties${id}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    try {
+      await fetch(`${API}/api/properties/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-    setProperties((prev) => prev.filter((p) => p._id !== id));
+      setProperties((prev) =>
+        prev.filter((p) => p._id !== id)
+      );
+
+      setSuccess("Property deleted successfully");
+      setError("");
+
+    } catch {
+      setError("Failed to delete property");
+      setSuccess("");
+    }
   }
 
   function handleEdit(id) {
@@ -69,14 +82,29 @@ function Dashboard() {
 
         </div>
       </div>
+      {success && (
+        <p className="mb-4 text-sm text-green-600">
+          {success}
+        </p>
+      )}
+
+      {error && (
+        <p className="mb-4 text-sm text-red-500">
+          {error}
+        </p>
+      )}
+
 
       {/* Properties Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
 
         {properties.length === 0 ? (
-          <p className="text-center col-span-full text-gray-500">
-            No properties added yet
-          </p>
+          <div className="text-center col-span-full py-16">
+            <i className="fa-regular fa-building text-4xl text-gray-400 mb-4"></i>
+            <p className="text-gray-500">
+              No properties added yet
+            </p>
+          </div>
         ) : (
           properties.map((item) => (
             <div
@@ -101,6 +129,9 @@ function Dashboard() {
 
                 <p className="text-sm text-gray-500 line-clamp-1">
                   📍 {item.location}
+                </p>
+                <p className="text-[#c27b57] font-bold mt-2">
+                  ₹ {item.price}
                 </p>
               </div>
 

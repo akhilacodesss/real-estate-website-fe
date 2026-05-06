@@ -1,22 +1,27 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+import heroImg from "../assets/hero.png";
+import AboutSection from "./AboutSection";
+import Contact from "./Contact";
+import Footer from "./Footer";
+
 function formatPrice(price) {
-  if (!price) return "";
+    if (!price) return "";
 
-  if (price >= 10000000) {
-    return `₹ ${(price / 10000000)
-      .toFixed(1)
-      .replace(".0", "")} Cr`;
-  }
+    if (price >= 10000000) {
+        return `₹ ${(price / 10000000)
+            .toFixed(1)
+            .replace(".0", "")} Cr`;
+    }
 
-  if (price >= 100000) {
-    return `₹ ${(price / 100000)
-      .toFixed(1)
-      .replace(".0", "")} L`;
-  }
+    if (price >= 100000) {
+        return `₹ ${(price / 100000)
+            .toFixed(1)
+            .replace(".0", "")} L`;
+    }
 
-  return `₹ ${price.toLocaleString("en-IN")}`;
+    return `₹ ${price.toLocaleString("en-IN")}`;
 }
 
 function Home() {
@@ -25,51 +30,93 @@ function Home() {
     const [type, setType] = useState("");
     const [priceRange, setPriceRange] = useState("");
 
+    const [wishlist, setWishlist] = useState([]);
+    const [wishlistMessage, setWishlistMessage] = useState("");
+
     const API = process.env.REACT_APP_API_URL;
     const navigate = useNavigate();
+
+    const displayProperties = properties.length >= 6 ? properties.slice(0, 6) : properties;
 
     useEffect(() => {
         async function fetchData() {
             const res = await fetch(`${API}/api/properties`);
             const data = await res.json();
-            setProperties(data.slice(0, 5));
+            setProperties(data);
         }
 
         fetchData();
     }, [API]);
 
+    async function handleWishlist(propertyId) {
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            navigate("/login");
+            return;
+        }
+
+        try {
+            const res = await fetch(`${API}/api/favorites`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ propertyId }),
+            });
+
+            const data = await res.json();
+
+            if (data.message.includes("Added")) {
+                setWishlist((prev) => [...prev, propertyId]);
+                setWishlistMessage("Added to wishlist ❤️");
+            } else {
+                setWishlist((prev) =>
+                    prev.filter((id) => id !== propertyId)
+                );
+                setWishlistMessage("Removed from wishlist");
+            }
+
+            setTimeout(() => {
+                setWishlistMessage("");
+            }, 2000);
+
+        } catch {
+            setWishlistMessage("Something went wrong");
+        }
+    }
     return (
         <>
-            <div className="max-w-7xl mx-auto">
+            <div className="w-full bg-[#f3ede8]">
+                <section className="px-6 md:px-12 py-10 md:py-14 grid md:grid-cols-2 items-center gap-10">
 
-                {/* HERO SECTION */}
-                <div className="bg-[#cbb8a9] flex flex-col items-center justify-center py-20 rounded-xl mt-10 ">
+                    {/* LEFT */}
+                    <div>
 
-                    {/* The Title */}
-                    <h1 className="text-4xl text-[#3b2a1f] font-bold mb-10">
-                        Find Your Dream Home
-                    </h1>
+                        <h1 className="text-5xl font-bold text-[#3b2a1f] leading-tight">
+                            Find Your Dream <br /> Home
+                        </h1>
 
-                    {/* SEARCH BOX  */}
-                    <div className="bg-[#806248] p-6 rounded-2xl shadow-lg flex gap-4 items-center w-[90%] md:w-[80%]">
+                        <p className="text-gray-600 mt-4 max-w-md">
+                            Your dream space is just a search away.
+                        </p>
 
-                        {/* Location */}
-                        <div className="bg-white px-4 py-2 rounded-lg flex items-center gap-2 flex-1">
-                            <i className="fa-solid fa-location-dot text-gray-500"></i>
+                        {/* SEARCH BAR */}
+                        <div className="mt-6 bg-[#806248] p-4 rounded-xl shadow-md flex flex-col md:flex-row gap-3">
+
+                            {/* Location */}
                             <input
                                 type="text"
                                 placeholder="Location"
-                                className="outline-none w-full"
+                                className="px-4 py-2 rounded-md outline-none flex-1"
                                 value={location}
                                 onChange={(e) => setLocation(e.target.value)}
                             />
-                        </div>
 
-                        {/* Type */}
-                        <div className="bg-white px-4 py-2 rounded-lg flex items-center gap-2 flex-1">
-                            <i className="fa-solid fa-house text-gray-500"></i>
+                            {/* Type */}
                             <select
-                                className="outline-none w-full"
+                                className="px-3 py-2 rounded-md outline-none"
                                 value={type}
                                 onChange={(e) => setType(e.target.value)}
                             >
@@ -78,116 +125,157 @@ function Home() {
                                 <option value="house">House</option>
                                 <option value="villa">Villa</option>
                             </select>
-                        </div>
 
-                        {/* Price */}
-                        <div className="bg-white px-4 py-2 rounded-lg flex items-center gap-2 flex-1">
-                            <i className="fa-solid fa-indian-rupee-sign text-gray-500"></i>
+                            {/* Price */}
                             <select
-                                className="outline-none w-full"
+                                className="px-3 py-2 rounded-md outline-none"
                                 value={priceRange}
                                 onChange={(e) => setPriceRange(e.target.value)}
                             >
-                                <option value="">Price Range</option>
+                                <option value="">Price</option>
                                 <option value="low">Below 5L</option>
                                 <option value="mid">5L - 20L</option>
                                 <option value="high">Above 20L</option>
                             </select>
+
+                            {/* Button */}
+                            <button
+                                onClick={() =>
+                                    navigate(
+                                        `/property?location=${location}&type=${type}&price=${priceRange}`
+                                    )
+                                }
+                                className="bg-[#3b2a1f] text-white px-5 py-2 rounded-md hover:opacity-90"
+                            >
+                                Search
+                            </button>
                         </div>
-
-                        {/* Button */}
-                        <button
-                            onClick={() => navigate(`/properties?location=${location}`)}
-                            className="bg-[#3b2a1f] text-white px-6 py-2 rounded-lg hover:bg-opacity-90"
-                        >
-                            Search
-                        </button>
-
                     </div>
+
+                    {/* RIGHT IMAGE */}
+                    <div className="flex items-end justify-center md:justify-end">
+                        <img
+                            src={heroImg}
+                            alt="hero"
+                            className="w-[115%] md:w-[130%] max-h-[520px] object-cover drop-shadow-2xl"
+                        />
+                    </div>
+                </section>
+            </div>
+            <AboutSection />
+
+            <section id="properties" className="bg-[#f3ede8] py-16">
+
+                {/* HEADER */}
+                <div className="max-w-7xl mx-auto px-6 flex items-center justify-between mb-10">
+
+                    {/* LEFT */}
+                    <div>
+                        <span className="bg-[#e7ddd4] text-[#3b2a1f] text-xs px-3 py-1 rounded-full font-medium">
+                            Properties
+                        </span>
+
+                        <h2 className="text-3xl md:text-4xl font-bold text-[#2f2219] mt-2">
+                            Featured Listings
+                        </h2>
+                    </div>
+
+                    {/* RIGHT BUTTON */}
+                    <button
+                        onClick={() => navigate("/property")}
+                        className="text-[#2f2219] font-medium flex items-center gap-2 hover:gap-3 transition whitespace-nowrap"
+                    >
+                        View All
+                        <i className="fa-solid fa-arrow-right text-sm"></i>
+                    </button>
+
                 </div>
+                {/* GRID */}
+                <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
 
-                {/* BROWSE PROPERTIES */}
-                <h2 className="text-2xl text-[#3b2a1f] font-bold mt-16 mb-4">
-                    Browse Properties
-                </h2>
+                    {displayProperties.map((item) => (
 
-                {/* PROPERTIES GRID */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                    {properties.map((item) => (
                         <div
                             key={item._id}
                             onClick={() => navigate(`/property/${item._id}`)}
-                            className="bg-[#cbb8a9] p-4 rounded-xl border border-gray shadow-sm hover:shadow-md transition-all cursor-pointer group"
+                            className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition cursor-pointer group"
                         >
-                            <div className="overflow-hidden rounded-lg bg-white">
+
+                            {/* IMAGE */}
+                            <div className="relative h-56 overflow-hidden">
+
                                 <img
                                     src={item.image}
-                                    className="h-40 w-full object-cover group-hover:scale-105 transition-transform duration-300"
                                     alt="property"
+                                    className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
                                 />
+
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleWishlist(item._id);
+                                    }}
+                                    className="absolute top-3 right-3 text-lg bg-black/40 text-white p-2 rounded-full hover:scale-110 transition"
+                                >
+                                    <i
+                                        className={
+                                            wishlist.includes(item._id)
+                                                ? "fa-solid fa-heart text-red-500"
+                                                : "fa-regular fa-heart"
+                                        }
+                                    ></i>
+                                </button>
+
+                                {/* OVERLAY */}
+                                <div className="absolute bottom-0 w-full bg-black/60 text-white text-sm flex justify-between px-3 py-2">
+                                    <span>
+                                        <i className="fa-solid fa-location-dot mr-1"></i>
+                                        {item.location}
+                                    </span>
+
+                                    <span className="flex gap-2 text-xs">
+                                        <span>
+                                            <i className="fa-solid fa-bed"></i> {item.rooms}
+                                        </span>
+                                        <span>
+                                            <i className="fa-solid fa-bath"></i> 2
+                                        </span>
+                                    </span>
+                                </div>
+
                             </div>
 
-                            <h3 className="mt-3 font-bold text-black line-clamp-1">
-                                {item.title}
-                            </h3>
+                            {/* CONTENT */}
+                            <div className="p-4">
+                                <h3 className="font-semibold text-[#2f2219] line-clamp-1">
+                                    {item.title}
+                                </h3>
 
-                            <p className="text-gray-600 text-sm flex items-center gap-1 font-medium">
-                                <i className="fa-solid fa-location-dot text-[#806248]"></i> {item.location}
-                            </p>
+                                <p className="text-[#c27b57] font-bold mt-2">
+                                    {formatPrice(item.price)}
+                                </p>
+                            </div>
 
-                            <p className="text-[#3b2a1f] font-black mt-2 text-lg">
-                                {formatPrice(item.price)}
-                            </p>
                         </div>
                     ))}
 
-                    {/* VIEW ALL CARD */}
-                    <div
-                        onClick={() => navigate("/properties")}
-                        className="bg-[#cbb8a9] p-4 rounded-xl shadow-md hover:shadow-xl cursor-pointer flex flex-col items-center justify-center transition-all group"
+                </div>
+                {wishlistMessage && (
+                    <p
+                        className={`text-center text-sm mt-6 ${wishlistMessage.includes("Removed")
+                                ? "text-red-500"
+                                : "text-green-600"
+                            }`}
                     >
-                        <div className="bg-white/20 p-4 rounded-full mb-3 group-hover:scale-110 transition-transform">
-                            <i className="fa-solid fa-arrow-right text-2xl text-[#3b2a1f]"></i>
-                        </div>
-                        <span className="font-bold text-[#3b2a1f] text-lg">
-                            View All Properties
-                        </span>
-                    </div>
-                </div>
-            </div>
+                        {wishlistMessage}
+                    </p>
+                )}
 
-            <footer className="bg-[#cbb8a9] py-16 px-6 mt-20 w-full">
-                <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-12 text-center">
+            </section>
 
-                    {/* Verified Listings */}
-                    <div className="flex flex-col items-center">
-                        <div className="bg-white/40 p-4 rounded-full mb-4 shadow-sm">
-                            <i className="fa-solid fa-circle-check text-[#3b2a1f] text-2xl"></i>
-                        </div>
-                        <h3 className="font-bold text-[#3b2a1f] text-xl">Verified Listings</h3>
-                        <p className="text-[#3b2a1f]/70 text-sm mt-2">Trusted properties for your home</p>
-                    </div>
+            <Contact />
 
-
-                    {/* Easy Contact */}
-                    <div className="flex flex-col items-center">
-                        <div className="bg-white/40 p-4 rounded-full mb-4 shadow-sm">
-                            <i className="fa-solid fa-envelope text-[#3b2a1f] text-2xl"></i>
-                        </div>
-                        <h3 className="font-bold text-[#3b2a1f] text-xl">Easy Contact</h3>
-                        <p className="text-[#3b2a1f]/70 text-sm mt-2">Direct agent messaging anytime</p>
-                    </div>
-
-                    {/* Best Prices */}
-                    <div className="flex flex-col items-center">
-                        <div className="bg-white/40 p-4 rounded-full mb-4 shadow-sm">
-                            <i className="fa-solid fa-indian-rupee-sign text-[#3b2a1f] text-2xl"></i>
-                        </div>
-                        <h3 className="font-bold text-[#3b2a1f] text-lg">Best Prices</h3>
-                        <p className="text-[#3b2a1f]/70 text-sm mt-2">Affordable and luxury options</p>
-                    </div>
-                </div>
-            </footer>
+            <Footer/>
         </>
     );
 }

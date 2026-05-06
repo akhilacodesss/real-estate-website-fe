@@ -5,6 +5,8 @@ function Messages() {
   const [selectedChat, setSelectedChat] = useState(null);
   const [chatMessages, setChatMessages] = useState([]);
   const [reply, setReply] = useState("");
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
 
   const token = localStorage.getItem("token");
   const API = process.env.REACT_APP_API_URL;
@@ -12,32 +14,39 @@ function Messages() {
   const user = token ? JSON.parse(atob(token.split(".")[1])) : null;
   const userId = user?.id;
 
-  // Fetch all messages
   useEffect(() => {
-    async function fetchMessages() {
-      try{
-      const res = await fetch(`${API}/api/messages`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+    if (!token) return;
 
-      const data = await res.json();
-      setMessages(data);
+    async function fetchMessages() {
+      try {
+        const res = await fetch(`${API}/api/messages`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const data = await res.json();
+        setMessages(data);
+
       } catch {
-        console.log("Failed to load messages");
+        setMessages([]);
+        setError("Failed to load messages");
       }
     }
 
-    if (token) fetchMessages();
+    fetchMessages();
   }, [token, API]);
 
-  // Open chat
   async function openChat(message) {
     setSelectedChat(message);
 
+    const otherUserId =
+      message.sender?._id === userId
+        ? message.receiver?._id
+        : message.sender?._id;
+
     const res = await fetch(
-      `${API}/api/messages/conversation/${message.sender._id}`,
+      `${API}/api/messages/conversation/${otherUserId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -49,38 +58,62 @@ function Messages() {
     setChatMessages(data);
   }
 
-  // Send reply
   async function handleReply() {
     if (!reply.trim()) return;
 
-    const res = await fetch(`${API}/api/messages`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        text: reply,
-        receiver: selectedChat.sender._id,
-        propertyId: selectedChat.propertyId._id,
-      }),
-    });
+    const receiverId =
+      selectedChat.sender?._id === userId
+        ? selectedChat.receiver?._id
+        : selectedChat.sender?._id;
 
-    const data = await res.json();
+    try {
+      const res = await fetch(`${API}/api/messages`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          text: reply,
+          receiver: receiverId,
+          propertyId: selectedChat.propertyId?._id || null,
+        }),
+      });
 
-    if (res.ok) {
-      setChatMessages((prev) => [...prev, data]);
-      setReply("");
+      const data = await res.json();
+
+      if (res.ok) {
+        setChatMessages((prev) => [...prev, data]);
+        setReply("");
+        setSuccess("Message sent");
+        setError("");
+      } else {
+        setError(data.message || "Failed to send message");
+        setSuccess("");
+      }
+
+    } catch {
+      setError("Something went wrong");
+      setSuccess("");
     }
   }
 
-  // Auto scroll
   useEffect(() => {
     const chatBox = document.getElementById("chat-box");
     if (chatBox) {
       chatBox.scrollTop = chatBox.scrollHeight;
     }
   }, [chatMessages]);
+
+  if (!token) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#f3ede8]">
+        <p className="text-[#3b2a1f] text-lg font-medium">
+          Please login to view messages
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#f3ede8] px-6 py-10 max-w-5xl mx-auto">
@@ -89,62 +122,78 @@ function Messages() {
         Messages
       </h1>
 
-      {/* Message List */}
+      {/* MESSAGE LIST */}
       {messages.length === 0 ? (
-        <p className="text-gray-500">No messages yet</p>
+        <div className="text-center py-16">
+          <i className="fa-regular fa-message text-4xl text-gray-400 mb-4"></i>
+          <p className="text-gray-500">
+            No messages yet
+          </p>
+        </div>
       ) : (
         <div className="space-y-4">
-          {messages.map((m) => (
-            <div
-              key={m._id}
-              className="cursor-pointer bg-white rounded-2xl shadow-sm border p-5 hover:shadow-md transition"
-            >
-              <div className="flex justify-between items-center mb-2">
-                <p className="font-semibold text-[#3b2a1f]">
-                  {m.sender?.name || "User"}
-                </p>
+          {messages.map((m) => {
 
-                <p className="text-xs text-gray-400">
-                  {new Date(m.createdAt).toLocaleDateString()}
-                </p>
-              </div>
+            const otherUser =
+              m.sender?._id === userId ? m.receiver : m.sender;
 
-              <p className="text-sm text-gray-500 mb-2">
-                📍 {m.propertyId?.title}
-              </p>
-
-              <p className="text-gray-800 text-sm">
-                {m.text}
-              </p>
-
-              <button
-                onClick={() => openChat(m)}
-                className="mt-3 text-sm text-[#3b2a1f] font-medium hover:underline ium hover:underline hover:opacity-80"
+            return (
+              <div
+                key={m._id}
+                className="cursor-pointer bg-white rounded-2xl shadow-sm border p-5 hover:shadow-md transition"
               >
-                Open Chat →
-              </button>
 
-            </div>
-          ))}
+                <div className="flex justify-between items-center mb-2">
+                  <p className="font-semibold text-[#3b2a1f]">
+                    {otherUser?.name || "User"}
+                  </p>
+
+                  <p className="text-xs text-gray-400">
+                    {new Date(m.createdAt).toLocaleDateString()}
+                  </p>
+                </div>
+
+                <p className="text-sm text-gray-500 mb-2">
+                  📍 {m.propertyId?.title || "General Inquiry"}
+                </p>
+
+                <p className="text-gray-800 text-sm">
+                  {m.text}
+                </p>
+
+                <button
+                  onClick={() => openChat(m)}
+                  className="mt-3 text-sm text-[#3b2a1f] font-medium hover:underline"
+                >
+                  Open Chat →
+                </button>
+
+              </div>
+            );
+          })}
         </div>
       )}
 
-      {/* Chat Popup */}
+      {/* CHAT POPUP */}
       {selectedChat && (
-        <div
-          onClick={(e) => e.stopPropagation()}
-          className="fixed bottom-5 right-5 w-96 bg-white shadow-xl rounded-2xl p-4 border"
-        >
+        <div className="fixed bottom-5 right-5 w-96 bg-white shadow-xl rounded-2xl p-4 border">
 
-          {/* Header */}
+          {/* HEADER */}
           <div className="flex justify-between mb-3">
-            <p className="font-bold">
-              {selectedChat.sender?.name}
-            </p>
+            <div>
+              <p className="font-bold">
+                {
+                  selectedChat.sender?._id === userId
+                    ? selectedChat.receiver?.name
+                    : selectedChat.sender?.name
+                }
+              </p>
+            </div>
+
             <button onClick={() => setSelectedChat(null)}>✖</button>
           </div>
 
-          {/* Chat Messages */}
+          {/* CHAT */}
           <div
             id="chat-box"
             className="h-60 overflow-y-auto space-y-2 mb-3"
@@ -161,8 +210,8 @@ function Messages() {
                 <div
                   key={msg._id}
                   className={`p-2 rounded text-sm max-w-[75%] ${isMe
-                      ? "bg-[#3b2a1f] text-white ml-auto text-right"
-                      : "bg-gray-200 text-left"
+                    ? "bg-[#3b2a1f] text-white ml-auto text-right"
+                    : "bg-gray-200 text-left"
                     }`}
                 >
                   {msg.text}
@@ -171,7 +220,7 @@ function Messages() {
             })}
           </div>
 
-          {/* Input */}
+          {/* INPUT */}
           <input
             value={reply}
             onChange={(e) => setReply(e.target.value)}
@@ -179,12 +228,28 @@ function Messages() {
             className="w-full border p-2 rounded mb-2 text-sm"
           />
 
+          {/* SEND */}
           <button
             onClick={handleReply}
-            className="w-full bg-[#3b2a1f] text-white py-2 rounded"
+            disabled={!reply.trim()}
+            className={`w-full py-2 rounded ${reply.trim()
+              ? "bg-[#3b2a1f] text-white"
+              : "bg-gray-300 text-gray-500 cursor-not-allowed"
+              }`}
           >
             Send
           </button>
+          {success && (
+            <p className="text-sm text-green-600 mt-2 text-center">
+              {success}
+            </p>
+          )}
+
+          {error && (
+            <p className="text-sm text-red-500 mt-2 text-center">
+              {error}
+            </p>
+          )}
 
         </div>
       )}
