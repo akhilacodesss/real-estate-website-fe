@@ -113,7 +113,6 @@ function Properties() {
             <option value="apartment">Apartment</option>
             <option value="house">House</option>
             <option value="villa">Villa</option>
-            <option value="flat">Flat</option>
           </select>
         </div>
 
