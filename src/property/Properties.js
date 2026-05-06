@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 function formatPrice(price) {
   if (!price) return "";
@@ -21,9 +21,17 @@ function formatPrice(price) {
 
 function Properties() {
   const [properties, setProperties] = useState([]);
-  const [search, setSearch] = useState("");
+  const locationData = useLocation();
+  const queryParams = new URLSearchParams(locationData.search);
+
+  const locationQuery = queryParams.get("location") || "";
+  const typeQuery = queryParams.get("type") || "";
+  const priceQuery = queryParams.get("price") || "";
+
+  const [search, setSearch] = useState(locationQuery);
+  const [priceRange, setPriceRange] = useState(priceQuery);
+  const [type, setType] = useState(typeQuery);
   const navigate = useNavigate();
-  const [priceRange, setPriceRange] = useState("");
 
   const API = process.env.REACT_APP_API_URL;
 
@@ -40,24 +48,35 @@ function Properties() {
     fetchProperties();
   }, [API]);
 
-
+  useEffect(() => {
+    setSearch(locationQuery);
+    setPriceRange(priceQuery);
+    setType(typeQuery);
+  }, [locationQuery, priceQuery, typeQuery]);
 
   const filteredProperties = properties.filter((item) => {
     const matchesLocation = item.location
       .toLowerCase()
       .includes(search.toLowerCase());
 
+    const matchesType =
+      !type || item.type.toLowerCase() === type.toLowerCase();
+
     let matchesPrice = true;
 
-    if (priceRange === "low") {
-      matchesPrice = item.price < 500000;
-    } else if (priceRange === "mid") {
-      matchesPrice = item.price >= 500000 && item.price <= 2000000;
-    } else if (priceRange === "high") {
-      matchesPrice = item.price > 2000000;
+    if (priceRange === "0-50") {
+      matchesPrice = item.price <= 5000000;
+    } else if (priceRange === "50-100") {
+      matchesPrice =
+        item.price > 5000000 && item.price <= 10000000;
+    } else if (priceRange === "100-200") {
+      matchesPrice =
+        item.price > 10000000 && item.price <= 20000000;
+    } else if (priceRange === "300+") {
+      matchesPrice = item.price > 30000000;
     }
 
-    return matchesLocation && matchesPrice;
+    return matchesLocation && matchesPrice && matchesType;
   });
 
   return (
@@ -83,6 +102,22 @@ function Properties() {
         </div>
 
         <div className="bg-white px-4 py-2 rounded-lg flex items-center gap-2 flex-1 w-full">
+          <i className="fa-solid fa-house text-gray-500"></i>
+
+          <select
+            className="outline-none w-full bg-transparent"
+            value={type}
+            onChange={(e) => setType(e.target.value)}
+          >
+            <option value="">All Types</option>
+            <option value="apartment">Apartment</option>
+            <option value="house">House</option>
+            <option value="villa">Villa</option>
+            <option value="flat">Flat</option>
+          </select>
+        </div>
+
+        <div className="bg-white px-4 py-2 rounded-lg flex items-center gap-2 flex-1 w-full">
           <i className="fa-solid fa-indian-rupee-sign text-gray-500"></i>
           <select
             className="outline-none w-full bg-transparent"
@@ -90,9 +125,10 @@ function Properties() {
             onChange={(e) => setPriceRange(e.target.value)}
           >
             <option value="">All Prices</option>
-            <option value="low">Below 5L</option>
-            <option value="mid">5L - 20L</option>
-            <option value="high">Above 20L</option>
+            <option value="0-50">0 - 50L</option>
+            <option value="50-100">50L - 1Cr</option>
+            <option value="100-200">1Cr - 2Cr</option>
+            <option value="300+">Above 3Cr</option>
           </select>
         </div>
 

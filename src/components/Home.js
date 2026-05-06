@@ -7,21 +7,21 @@ import Contact from "./Contact";
 import Footer from "./Footer";
 
 function formatPrice(price) {
-    if (!price) return "";
+  if (!price) return "";
 
-    if (price >= 10000000) {
-        return `₹ ${(price / 10000000)
-            .toFixed(1)
-            .replace(".0", "")} Cr`;
-    }
+  if (price >= 10000000) {
+    return `₹ ${(price / 10000000)
+      .toFixed(1)
+      .replace(".0", "")} Cr`;
+  }
 
-    if (price >= 100000) {
-        return `₹ ${(price / 100000)
-            .toFixed(1)
-            .replace(".0", "")} L`;
-    }
+  if (price >= 100000) {
+    return `₹ ${(price / 100000)
+      .toFixed(1)
+      .replace(".0", "")} L`;
+  }
 
-    return `₹ ${price.toLocaleString("en-IN")}`;
+  return `₹ ${price.toLocaleString("en-IN")}`;
 }
 
 function Home() {
@@ -109,33 +109,35 @@ function Home() {
                             <input
                                 type="text"
                                 placeholder="Location"
-                                className="px-4 py-2 rounded-md outline-none flex-1"
+                                className="px-4 py-2 rounded-md outline-none w-full md:w-[220px]"
                                 value={location}
                                 onChange={(e) => setLocation(e.target.value)}
                             />
 
                             {/* Type */}
                             <select
-                                className="px-3 py-2 rounded-md outline-none"
+                                cclassName="px-3 py-2 rounded-md outline-none w-full md:w-[140px]"
                                 value={type}
                                 onChange={(e) => setType(e.target.value)}
                             >
-                                <option value="">Type</option>
+                                <option value=""> property type</option>
                                 <option value="apartment">Apartment</option>
                                 <option value="house">House</option>
                                 <option value="villa">Villa</option>
+                                <option value="flat">Flat</option>
                             </select>
 
                             {/* Price */}
                             <select
-                                className="px-3 py-2 rounded-md outline-none"
+                                className="px-3 py-2 rounded-md outline-none w-full md:w-[140px]"
                                 value={priceRange}
                                 onChange={(e) => setPriceRange(e.target.value)}
                             >
-                                <option value="">Price</option>
-                                <option value="low">Below 5L</option>
-                                <option value="mid">5L - 20L</option>
-                                <option value="high">Above 20L</option>
+                                <option value="">All Prices</option>
+                                <option value="0-50">0 - 50L</option>
+                                <option value="50-100">50L - 1Cr</option>
+                                <option value="100-200">1Cr - 2Cr</option>
+                                <option value="300+">Above 3Cr</option>
                             </select>
 
                             {/* Button */}
