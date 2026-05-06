@@ -1,134 +1,171 @@
-## 🏡 Real Estate MERN Application
+````md
+# 🏡 Brickly — Real Estate MERN Application
 
-A full-stack Real Estate web application built using the MERN stack.
-Users can browse and contact agents, while agents can manage property listings through a dedicated dashboard.
+Brickly is a full-stack Real Estate web application built using the MERN stack.  
+Users can browse properties, connect with agents, save listings to wishlist, and explore detailed property information, while agents can manage their own listings through a dedicated dashboard.
+
+The project focuses on responsive UI design, authentication, role-based access control, property management, and messaging between users and agents.
 
 ---
 
-## 🚀 Live Demo
+# 🚀 Live Demo
 
-🌐 Frontend (Netlify):
+### 🌐 Frontend (Netlify)
 https://real-estate-website00.netlify.app/
 
-🌐 Backend (Render):
+### 🌐 Backend (Render)
 https://real-estate-website-be.onrender.com/
 
 ---
 
-## 👥 User Roles
+# 👥 User Roles
 
-### 👤 User
+## 👤 User
 
-* Browse all properties
-* Search by location
-* Filter by price
-* View detailed property info
-* Contact agents via messaging system
-
-### 🧑‍💼 Agent
-
-* Add new properties
-* Edit existing properties
-* Delete listings
-* Manage properties via dashboard
-* View and reply to user messages
+- Browse all properties
+- Search by location
+- Filter by property type and price
+- View detailed property information
+- Save properties to wishlist
+- Contact agents through messaging
 
 ---
 
-## ✨ Features
+## 🧑‍💼 Agent
 
-### 🏠 Property Listings
-
-* Responsive property grid
-* Detailed property pages including:
-
-  * Title
-  * Location
-  * Price (₹ formatted in L/Cr)
-  * Rooms & type
-  * Description
-  * Image
+- Add new properties
+- Edit existing properties
+- Delete own listings
+- Manage properties via dashboard
+- View and reply to messages
 
 ---
 
-### 🔍 Search & Filters
+## 🛡️ Admin
 
-* Search by location
-* Filter by price range
-
----
-
-### 📩 Messaging System (Core Feature 🔥)
-
-* Users can send messages to agents
-* Agents receive messages in dashboard
-* Real-time style chat interface
-* Conversation view between user & agent
+- View users
+- Monitor listed properties
+- Access platform leads/messages
+- Manage platform activity through admin dashboard
 
 ---
 
-### 🧑‍💼 Agent System
+# ✨ Features
 
-* Role-based access control
-* Only agents can manage properties
-* Only property owners can edit/delete
+## 🏠 Property Listings
 
----
-
-### 📊 Dashboard
-
-* View only your own properties
-* Manage listings (Add / Edit / Delete)
-* Access user messages
-
----
-
-### 🔐 Authentication
-
-* Login / Signup system
-* JWT-based authentication
-* Secure protected routes
+- Responsive property grid
+- Detailed property pages
+- Property information includes:
+  - Title
+  - Price
+  - Location
+  - Rooms
+  - Property type
+  - Description
+  - Image
 
 ---
 
-### 📱 Responsive Design
+## 🔍 Search & Filters
 
-* Built with Tailwind CSS
-* Mobile-first design
+- Search by location
+- Filter by property type
+- Filter by price range
 
----
+Supported property types:
 
-## 🛠️ Tech Stack
-
-**Frontend:**
-
-* React (CRA)
-* Tailwind CSS
-* React Router
-
-**Backend:**
-
-* Node.js
-* Express.js
-
-**Database:**
-
-* MongoDB (Mongoose)
+- Apartment
+- House
+- Villa
+- Flat
+- Plot
 
 ---
 
-## 📁 Project Structure
+## ❤️ Wishlist System
 
-```
-client/ → React frontend  
-server/ → Node.js backend  
-```
+- Save favorite properties
+- Remove properties from wishlist
+- Dedicated wishlist page
 
 ---
 
-## ⚙️ Setup Instructions
+## 📩 Messaging System
 
-### Frontend
+- Users can contact agents directly
+- Agents can view conversations
+- Chat-style conversation interface
+- Role-based messaging access
+
+---
+
+## 📊 Dashboard
+
+### Agent Dashboard
+
+- Add / Edit / Delete properties
+- View own listings
+- Access user messages
+
+### Admin Dashboard
+
+- View users
+- View properties
+- View leads/messages
+- Dashboard statistics cards
+
+---
+
+# 🔐 Authentication
+
+- Login / Signup system
+- JWT-based authentication
+- Protected routes
+- Role-based access control
+
+---
+
+# 📱 Responsive Design
+
+- Built with Tailwind CSS
+- Mobile-friendly UI
+- Responsive navigation and layouts
+
+---
+
+# 🛠️ Tech Stack
+
+## Frontend
+
+- React.js
+- Tailwind CSS
+- React Router DOM
+
+## Backend
+
+- Node.js
+- Express.js
+
+## Database
+
+- MongoDB
+- Mongoose
+
+---
+
+# 📁 Project Structure
+
+```bash
+client/ → React frontend
+server/ → Node.js backend
+````
+
+---
+
+# ⚙️ Setup Instructions
+
+## Frontend
 
 ```bash
 git clone https://github.com/akhilacodesss/real-estate-website-fe
@@ -139,7 +176,7 @@ npm start
 
 ---
 
-### Backend
+## Backend
 
 ```bash
 git clone https://github.com/akhilacodesss/real-estate-website-be
@@ -150,28 +187,52 @@ npm start
 
 ---
 
-## 🔑 Demo Credentials
+# 🔑 Demo Credentials
 
-**Agent Login:**
+## 🧑‍💼 Agent Account
 
-* Email: [agent@gmail.com](mailto:agent@gmail.com)
-* Password: test
-
-**User Login:**
-
-* Email: [user@gmail.com](mailto:user@gmail.com)
-* Password: test1
+Email: [agent@brickly.com](mailto:agent@brickly.com)
+Password: Agent@123
 
 ---
 
-## 🌐 API Endpoints
+## 👤 User Account
 
-* POST /api/users/signup
-* POST /api/users/login
-* GET /api/properties
-* POST /api/properties
-* PUT /api/properties/:id
-* DELETE /api/properties/:id
-* GET /api/messages
-* POST /api/messages
+Email: [user@brickly.com](mailto:user@brickly.com)
+Password: User@123
 
+---
+
+## 🛡️ Admin Account
+
+Email: [admin@brickly.com](mailto:admin@brickly.com)
+Password: Admin@123
+
+---
+
+# 🌐 API Endpoints
+
+## Authentication
+
+* POST `/api/users/signup`
+* POST `/api/users/login`
+
+## Properties
+
+* GET `/api/properties`
+* POST `/api/properties`
+* PUT `/api/properties/:id`
+* DELETE `/api/properties/:id`
+
+## Messages
+
+* GET `/api/messages`
+* POST `/api/messages`
+
+## Wishlist
+
+* GET `/api/favorites`
+* POST `/api/favorites`
+
+```
+```
