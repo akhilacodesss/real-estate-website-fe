@@ -189,22 +189,22 @@ npm start
 
 ## 🧑‍💼 Agent Account
 
-Email: [agent@brickly.com](mailto:agent@brickly.com)
-Password: Agent@123
+Email: [agent@gmail.com]
+Password: test
 
 ---
 
 ## 👤 User Account
 
-Email: [user@brickly.com](mailto:user@brickly.com)
-Password: User@123
+Email: [user@gmail.com]
+Password: test1
 
 ---
 
 ## 🛡️ Admin Account
 
-Email: [admin@brickly.com](mailto:admin@brickly.com)
-Password: Admin@123
+Email: [admin@gmail.com]
+Password: test
 
 ---
 
